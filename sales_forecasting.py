@@ -25,3 +25,32 @@ plt.xlabel("Date")
 plt.ylabel("Sales")
 plt.show()
 print("Average Daily Sales:", daily_sales.mean())
+from sklearn.linear_model import LinearRegression
+import numpy as np
+
+# Create day numbers
+daily_sales_df = daily_sales.reset_index()
+daily_sales_df['Day'] = np.arange(len(daily_sales_df))
+
+# Features and target
+X = daily_sales_df[['Day']]
+y = daily_sales_df['Sales']
+
+# Train model
+model = LinearRegression()
+model.fit(X, y)
+
+# Predict next 30 days
+future_days = np.arange(len(daily_sales_df), len(daily_sales_df) + 30).reshape(-1, 1)
+future_sales = model.predict(future_days)
+
+print("Next 30 Days Sales Forecast:")
+print(future_sales)
+plt.figure(figsize=(10,5))
+plt.plot(daily_sales_df['Day'], y, label='Historical Sales')
+plt.plot(future_days, future_sales, label='Forecasted Sales')
+plt.title("Sales Forecast for Next 30 Days")
+plt.xlabel("Day Number")
+plt.ylabel("Sales")
+plt.legend()
+plt.show()
